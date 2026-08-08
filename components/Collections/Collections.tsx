@@ -128,6 +128,22 @@ export default function Collections() {
   const [gender, setGender] = useState<"men" | "women">("men");
   const [selected, setSelected] = useState<number | null>(null);
 
+  // createPortal needs to always be "present" in the tree (not conditionally
+  // called) for AnimatePresence to detect and animate its exit — but calling
+  // it unconditionally means its document.body argument gets evaluated on
+  // every render, including the server-side prerender where `document`
+  // doesn't exist. Gating on a mounted flag (set true only client-side,
+  // after hydration) keeps the portal out of the render tree entirely until
+  // we're safely in the browser.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    // Detecting "we've hydrated on the client" has no alternative to an
+    // effect; this isn't syncing to an external system, it's the one
+    // legitimate use of this pattern the rule doesn't carve out for.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+  }, []);
+
   const [displayIndex, setDisplayIndex] = useState<number | null>(null);
   // Adjusting state directly during render (guarded so it only fires on an
   // actual change) is React's supported pattern for this, and avoids the
@@ -270,7 +286,8 @@ export default function Collections() {
         ))}
       </div>
 
-      {createPortal(
+      {mounted &&
+        createPortal(
         <AnimatePresence>
           {selected !== null && displayIndex !== null && (
             <motion.div
