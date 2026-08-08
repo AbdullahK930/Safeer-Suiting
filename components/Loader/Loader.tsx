@@ -4,21 +4,22 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import styles from "./Loader.module.css";
+import { lockScroll, unlockScroll } from "@/lib/scrollLock";
 
 export default function Loader() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    document.body.style.overflow = "hidden";
+    lockScroll();
 
     const timer = setTimeout(() => {
       setLoading(false);
-      document.body.style.overflow = "";
+      unlockScroll();
     }, 2500);
 
     return () => {
       clearTimeout(timer);
-      document.body.style.overflow = "";
+      unlockScroll();
     };
   }, []);
 

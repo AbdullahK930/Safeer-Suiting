@@ -5,18 +5,45 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
+import { lockScroll, unlockScroll } from "@/lib/scrollLock";
 
 export default function Navbar() {
   const navRef = useRef<HTMLElement>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const closeMenu = () => setMobileOpen(false);
+  // Mobile links need to close the (scroll-locked) menu *and* then navigate.
+  // Doing this via the mobileOpen useEffect alone risks a race: the browser's
+  // native hash-jump can happen before React's effect restores the locked
+  // scroll position, which would then immediately snap the page back to
+  // where it started. Handling both steps explicitly, in order, avoids that.
+  const handleMobileNavClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    hash: string
+  ) => {
+    e.preventDefault();
+    setMobileOpen(false);
+    unlockScroll();
 
-  // Lock body scroll while the mobile menu is open, close on Escape
+    requestAnimationFrame(() => {
+      const target = document.querySelector(hash);
+      if (target) {
+        if (window.__lenis) {
+          window.__lenis.scrollTo(target as HTMLElement, { offset: 0 });
+        } else {
+          target.scrollIntoView({ behavior: "smooth" });
+        }
+      }
+    });
+  };
+
+  // Lock body scroll while the mobile menu is open, close on Escape.
+  // Only acts (and registers cleanup) while actually open, so mounting
+  // with mobileOpen=false never fires a stray unlock that could cancel
+  // an unrelated lock already held elsewhere (e.g. the page Loader).
   useEffect(() => {
-    document.body.style.overflow = mobileOpen ? "hidden" : "";
-
     if (!mobileOpen) return;
+
+    lockScroll();
 
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") setMobileOpen(false);
@@ -25,15 +52,10 @@ export default function Navbar() {
     window.addEventListener("keydown", onKeyDown);
 
     return () => {
+      unlockScroll();
       window.removeEventListener("keydown", onKeyDown);
     };
   }, [mobileOpen]);
-
-  useEffect(() => {
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, []);
 
   useGSAP(() => {
     // Intro animation
@@ -159,26 +181,35 @@ export default function Navbar() {
       {/* Mobile menu panel */}
       <div className={`mobile-menu ${mobileOpen ? "open" : ""}`}>
         <nav className="mobile-nav-links">
-          <Link href="#heritage" onClick={closeMenu}>
+          <Link
+            href="#heritage"
+            onClick={(e) => handleMobileNavClick(e, "#heritage")}
+          >
             Heritage
           </Link>
 
-          <Link href="#craftsmanship" onClick={closeMenu}>
+          <Link
+            href="#craftsmanship"
+            onClick={(e) => handleMobileNavClick(e, "#craftsmanship")}
+          >
             Craftsmanship
           </Link>
 
-          <Link href="#collections" onClick={closeMenu}>
+          <Link
+            href="#collections"
+            onClick={(e) => handleMobileNavClick(e, "#collections")}
+          >
             Collections
           </Link>
 
-          <Link href="#contact" onClick={closeMenu}>
+          <Link href="#contact" onClick={(e) => handleMobileNavClick(e, "#contact")}>
             Contact
           </Link>
         </nav>
 
         <a
           href="#contact"
-          onClick={closeMenu}
+          onClick={(e) => handleMobileNavClick(e, "#contact")}
           className="appointment-btn luxury-button"
         >
           Book Appointment

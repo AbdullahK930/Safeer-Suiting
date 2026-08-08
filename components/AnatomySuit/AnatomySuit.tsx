@@ -74,25 +74,41 @@ export default function AnatomySuit() {
     });
 
     // ----------------------------
-    // PIN THE RIGHT IMAGE
+    // PIN THE IMAGE PANEL
     // ----------------------------
-    ScrollTrigger.create({
-      // Trigger off the LEFT column, not the section. The content column's
-      // height never changes because of the pin (only its sibling, the
-      // image panel, gets pinned/spaced) so there's no circular
-      // measurement, and "bottom bottom" naturally lasts exactly as long
-      // as it takes to scroll through all the cards.
-      trigger: contentRef.current,
-      start: "top 120px",
-      end: "bottom bottom",
-      pin: pinRef.current,
-      pinSpacing: true,
-      anticipatePin: 1,
-      invalidateOnRefresh: true,
-      refreshPriority: 1,
+    // Desktop: content and image sit side-by-side, so pinning while the
+    // content column scrolls past keeps the image locked in its column.
+    // Mobile/tablet (<=1100px, matching the CSS breakpoint where .wrapper
+    // stacks and .imageWrapper gets order:-1 to appear first): the image
+    // now sits ABOVE the content in normal flow, so the pin has to trigger
+    // as soon as the image itself reaches the top — not once the content
+    // column (which now starts only after the full image height) does —
+    // otherwise the image has already scrolled out of view by the time the
+    // old trigger condition fired, causing a visible jump instead of a
+    // smooth pin.
+    const mm = gsap.matchMedia();
 
-      
-    });
+    mm.add(
+      {
+        isDesktop: "(min-width: 1101px)",
+        isMobile: "(max-width: 1100px)",
+      },
+      (context) => {
+        const { isDesktop } = context.conditions as { isDesktop: boolean };
+
+        ScrollTrigger.create({
+          trigger: isDesktop ? contentRef.current : pinRef.current,
+          start: isDesktop ? "top 120px" : "top 90px",
+          endTrigger: contentRef.current,
+          end: "bottom bottom",
+          pin: pinRef.current,
+          pinSpacing: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          refreshPriority: 1,
+        });
+      }
+    );
     
     // ----------------------------
     // INITIAL STATES

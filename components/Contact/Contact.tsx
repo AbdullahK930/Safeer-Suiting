@@ -4,7 +4,7 @@ import { useState, type ChangeEvent, type FormEvent } from "react";
 import styles from "./Contact.module.css";
 import { MapPin, Phone, Mail, Clock, MessageCircle, Send } from "lucide-react";
 
-const WHATSAPP_NUMBER = "923129857093";
+const WHATSAPP_NUMBER = "923128957093";
 
 type FormState = {
   name: string;
@@ -127,7 +127,7 @@ export default function Contact() {
             <Phone className={styles.icon} size={22} />
             <div>
               <h4>Phone</h4>
-              <p>+92 312 9857093</p>
+              <p>+92 312 8957093</p>
             </div>
           </div>
 
@@ -279,7 +279,7 @@ export default function Contact() {
 
         <div className={styles.buttons}>
           <a
-            href="https://wa.me/923129857093"
+            href={`https://wa.me/${WHATSAPP_NUMBER}`}
             target="_blank"
             rel="noreferrer"
             className={`${styles.whatsapp} luxury-button`}
@@ -289,7 +289,7 @@ export default function Contact() {
           </a>
 
           <a
-            href="tel:+923129857093"
+            href={`tel:+${WHATSAPP_NUMBER}`}
             className={`${styles.call} luxury-button`}
           >
             <Phone size={20} />

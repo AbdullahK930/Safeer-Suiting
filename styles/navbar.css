@@ -220,7 +220,7 @@
   justify-content: center;
   gap: 36px;
 
-  background: rgba(8, 8, 8, 0.97);
+  background: #080808;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 

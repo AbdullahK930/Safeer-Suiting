@@ -81,7 +81,7 @@ export default function Footer() {
 
             <Phone size={18}/>
 
-            <p>+92-312-9857093</p>
+            <p>+92-312-8957093</p>
 
           </div>
 
@@ -105,7 +105,7 @@ export default function Footer() {
           </a>
 
           <a
-            href="https://www.instagram.com/jalilbrothers1973"
+            href="https://www.instagram.com/"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Instagram"
@@ -123,7 +123,7 @@ export default function Footer() {
           </a>
 
           <a
-            href="https://wa.me/923129857093"
+            href="https://wa.me/923128957093"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="WhatsApp"

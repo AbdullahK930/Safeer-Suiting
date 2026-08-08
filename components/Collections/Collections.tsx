@@ -9,6 +9,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./Collections.module.css";
 import { ArrowRight, X } from "lucide-react";
 import ImageReveal from "@/components/ImageReveal/ImageReveal";
+import { lockScroll, unlockScroll } from "@/lib/scrollLock";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -134,15 +135,17 @@ export default function Collections() {
     setGender(next);
   };
 
+  // Only acts (and registers cleanup) while the modal is actually open, so
+  // mounting with selected=null never fires a stray unlock that could
+  // cancel an unrelated lock already held elsewhere (e.g. the page Loader,
+  // or the mobile nav menu).
   useEffect(() => {
-    if (selected !== null) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    if (selected === null) return;
+
+    lockScroll();
 
     return () => {
-      document.body.style.overflow = "";
+      unlockScroll();
     };
   }, [selected]);
 
