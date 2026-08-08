@@ -1,0 +1,645 @@
+@import "../styles/navbar.css";
+
+/* =========================================
+   RESET
+========================================= */
+
+*,
+*::before,
+*::after{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+  overflow-x:hidden;
+}
+
+body{
+  overflow-x:hidden;
+  background:#080808;
+  color:#ffffff;
+
+  font-family:var(--font-inter),sans-serif;
+
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility;
+
+  cursor:default;
+}
+
+/* =========================================
+   ROOT VARIABLES
+========================================= */
+
+:root{
+
+  --black:#080808;
+  --surface:#101010;
+  --surface-2:#171717;
+
+  --white:#ffffff;
+  --text:#d4d4d4;
+
+  --gold:#C9A227;
+  --gold-light:#DFC15B;
+
+  --border:rgba(255,255,255,.08);
+
+  --container:1400px;
+
+  --transition:.35s cubic-bezier(.4,0,.2,1);
+
+}
+
+/* =========================================
+   TYPOGRAPHY
+========================================= */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6{
+
+  font-family:var(--font-cormorant),serif;
+  font-weight:600;
+  letter-spacing:.3px;
+
+}
+
+p{
+
+  color:var(--text);
+  line-height:1.85;
+
+}
+
+blockquote,
+.accent-serif{
+
+  font-family:var(--font-baskerville),serif;
+
+}
+
+/* =========================================
+   LINKS
+========================================= */
+
+a{
+
+  color:inherit;
+  text-decoration:none;
+  transition:var(--transition);
+
+}
+
+/* =========================================
+   IMAGES
+========================================= */
+
+img{
+
+  display:block;
+  max-width:100%;
+  user-select:none;
+
+}
+
+/* =========================================
+   BUTTONS
+========================================= */
+
+button{
+
+  font-family:var(--font-inter),sans-serif;
+  cursor:pointer;
+
+}
+
+/* =========================================
+   SECTION
+========================================= */
+
+section{
+
+  position:relative;
+
+}
+
+/* =========================================
+   CONTAINER
+========================================= */
+
+.container{
+
+  width:min(92%,var(--container));
+  margin:auto;
+
+}
+
+/* =========================================
+   GOLD DIVIDER
+========================================= */
+
+.gold-divider{
+
+  width:80px;
+  height:2px;
+  margin:30px auto;
+
+  background:linear-gradient(
+      90deg,
+      transparent,
+      var(--gold),
+      transparent
+  );
+
+}
+
+/* =========================================
+   TEXT SELECTION
+========================================= */
+
+::selection{
+
+  background:var(--gold);
+  color:#111;
+
+}
+
+/* =========================================
+   SCROLLBAR
+========================================= */
+
+::-webkit-scrollbar{
+
+  width:10px;
+
+}
+
+::-webkit-scrollbar-track{
+
+  background:#090909;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+  background:linear-gradient(
+      to bottom,
+      #8b6b16,
+      var(--gold)
+  );
+
+  border-radius:999px;
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+  background:var(--gold-light);
+
+}
+
+/* =========================================
+   INPUTS
+========================================= */
+
+input,
+textarea{
+
+  font-family:var(--font-inter),sans-serif;
+
+}
+
+/* =========================================
+   GLOBAL TRANSITIONS
+========================================= */
+
+button,
+a,
+img,
+svg,
+.card,
+input,
+textarea{
+
+  transition:var(--transition);
+
+}
+
+/* =========================================
+   PREMIUM FADE
+========================================= */
+
+.fade-mask{
+
+  mask-image:linear-gradient(
+      to bottom,
+      transparent,
+      black 10%,
+      black 90%,
+      transparent
+  );
+
+}
+
+/* =========================================
+   PREMIUM GLOW
+========================================= */
+
+.gold-glow{
+
+  box-shadow:
+      0 0 25px rgba(201,162,39,.15),
+      0 0 60px rgba(201,162,39,.08);
+
+}
+
+/* =========================================
+   HOVER LIFT
+========================================= */
+
+.lift{
+
+  transition:transform .45s ease;
+
+}
+
+.lift:hover{
+
+  transform:translateY(-8px);
+
+}
+
+/* =========================================
+   SECTION DECORATION
+========================================= */
+
+section::before{
+
+  content:"";
+
+  position:absolute;
+
+  inset:0;
+
+  pointer-events:none;
+
+  background-image:
+
+  radial-gradient(
+      rgba(201,162,39,.03) 1px,
+      transparent 1px
+  );
+
+  background-size:42px 42px;
+
+  opacity:.35;
+
+}
+
+/* =========================================
+   FLOATING GOLD PARTICLES
+========================================= */
+
+body::before{
+
+  content:"";
+
+  position:fixed;
+
+  inset:0;
+
+  pointer-events:none;
+
+  z-index:0;
+
+  opacity:.28;
+
+  background-image:
+
+      radial-gradient(circle,rgba(201,162,39,.30) 1px,transparent 1.5px),
+      radial-gradient(circle,rgba(255,255,255,.12) 1px,transparent 1.5px);
+
+  background-size:180px 180px,260px 260px;
+
+  animation:particlesFloat 80s linear infinite;
+
+}
+
+@keyframes particlesFloat{
+
+  from{
+
+      transform:translateY(0);
+
+  }
+
+  to{
+
+      transform:translateY(-220px);
+
+  }
+
+}
+
+/* =========================================
+   GOLD SHIMMER
+========================================= */
+
+.shimmer{
+
+  position:relative;
+  overflow:hidden;
+
+}
+
+.shimmer::after{
+
+  content:"";
+
+  position:absolute;
+
+  top:0;
+  left:-120%;
+
+  width:60%;
+  height:100%;
+
+  background:linear-gradient(
+
+      90deg,
+
+      transparent,
+
+      rgba(255,255,255,.18),
+
+      transparent
+
+  );
+
+  transform:skewX(-20deg);
+
+  animation:shimmer 7s infinite;
+
+}
+
+@keyframes shimmer{
+
+  0%{
+
+      left:-120%;
+
+  }
+
+  100%{
+
+      left:150%;
+
+  }
+
+}
+
+/* =========================================
+   LUXURY BACKDROP
+========================================= */
+
+body::after{
+
+  content:"";
+
+  position:fixed;
+
+  inset:0;
+
+  pointer-events:none;
+
+  background:
+
+      radial-gradient(circle at 20% 20%,rgba(201,162,39,.05),transparent 35%),
+      radial-gradient(circle at 80% 40%,rgba(201,162,39,.04),transparent 40%),
+      radial-gradient(circle at 50% 100%,rgba(201,162,39,.05),transparent 35%);
+
+  z-index:-1;
+
+}
+/* ==========================================
+   Luxury Gold Shimmer
+========================================== */
+
+.shimmer-text{
+  position:relative;
+  display:inline-block;
+  overflow:hidden;
+}
+
+.shimmer-text::after{
+  content:"";
+
+  position:absolute;
+  inset:0;
+
+  background:linear-gradient(
+      115deg,
+      transparent 35%,
+      rgba(255,255,255,.10) 45%,
+      rgba(255,255,255,.65) 50%,
+      rgba(58,168,122,.7) 55%,
+      transparent 70%
+  );
+
+  transform:translateX(-180%);
+  animation:luxuryShimmer 6s linear infinite;
+
+  pointer-events:none;
+}
+
+@keyframes luxuryShimmer{
+
+  from{
+      transform:translateX(-180%);
+  }
+
+  to{
+      transform:translateX(180%);
+  }
+
+}
+/* ==========================================
+   Luxury Hover Lift
+========================================== */
+
+.luxury-card{
+
+  transition:
+      transform .45s ease,
+      box-shadow .45s ease,
+      border-color .45s ease;
+
+}
+
+.luxury-card:hover{
+
+  transform:translateY(-8px);
+
+  border-color:rgba(212,175,55,.45);
+
+  box-shadow:
+      0 30px 80px rgba(0,0,0,.45),
+      0 0 35px rgba(212,175,55,.15);
+
+}
+/* ===========================
+   Luxury Buttons
+=========================== */
+
+.luxury-button{
+  position:relative;
+  overflow:hidden;
+}
+
+.luxury-button::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:-120%;
+
+  width:70%;
+  height:100%;
+
+  background:linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,.35),
+    transparent
+  );
+
+  transform:skewX(-25deg);
+
+  transition:left .8s ease;
+}
+
+.luxury-button:hover::before{
+  left:170%;
+}
+
+.luxury-button:hover{
+  transform:translateY(-3px);
+}
+body::before{
+  content:"";
+  position:fixed;
+
+  left:var(--mouse-x);
+  top:var(--mouse-y);
+
+  width:450px;
+  height:450px;
+
+  transform:translate(-50%,-50%);
+
+  pointer-events:none;
+
+  background:radial-gradient(
+      circle,
+      rgba(201,162,39,.08),
+      transparent 70%
+  );
+
+  z-index:0;
+
+  transition:
+    left .08s linear,
+    top .08s linear;
+}
+html,
+body,
+a,
+button{
+  cursor:none;
+}
+html{
+  background:#050505;
+}
+
+body{
+  background:#050505;
+  overflow-x:hidden;
+}
+/* =========================
+   Luxury Section Divider
+========================= */
+
+section{
+  position:relative;
+}
+
+section:not(:last-of-type)::after{
+  content:"";
+
+  position:absolute;
+  left:50%;
+  bottom:-1px;
+
+  transform:translateX(-50%);
+
+  width:min(420px,70%);
+  height:1px;
+
+  background:
+  linear-gradient(
+    90deg,
+    transparent,
+    rgba(212,175,55,.15),
+    rgba(212,175,55,.9),
+    rgba(212,175,55,.15),
+    transparent
+  );
+
+  overflow:hidden;
+}
+
+section:not(:last-of-type)::before{
+  content:"";
+
+  position:absolute;
+
+  left:50%;
+  bottom:-2px;
+
+  width:140px;
+  height:3px;
+
+  transform:translateX(-220px);
+
+  background:linear-gradient(
+    90deg,
+    transparent,
+    #d4af37,
+    transparent
+  );
+
+  filter:blur(4px);
+
+  animation:dividerGlow 6s linear infinite;
+
+  z-index:2;
+}
+
+@keyframes dividerGlow{
+
+  0%{
+    transform:translateX(-220px);
+  }
+
+  100%{
+    transform:translateX(80px);
+  }
+
+}

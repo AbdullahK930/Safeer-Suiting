@@ -1,0 +1,381 @@
+.section {
+  position: relative;
+  padding: 160px 0;
+  background: linear-gradient(180deg, #050505 0%, #0b0b0b 100%);
+  overflow: hidden;
+}
+
+.section::before {
+  content: "";
+  position: absolute;
+  top: -220px;
+  right: -220px;
+  width: 700px;
+  height: 700px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(201, 162, 39, 0.12),
+    transparent 70%
+  );
+  filter: blur(80px);
+}
+
+.tag {
+  display: block;
+  text-align: center;
+  color: var(--gold);
+  letter-spacing: 5px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+
+.heading {
+  text-align: center;
+  color: white;
+  font-size: clamp(3rem, 6vw, 5rem);
+  line-height: 1.05;
+  margin-bottom: 28px;
+}
+
+/* Same shimmer-text/inline-block centering fix as BespokeJourney */
+.heading:global(.shimmer-text) {
+  display: table;
+  margin-inline: auto;
+}
+
+.intro {
+  width: min(760px, 90%);
+  margin: 0 auto 100px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.9;
+  font-size: 1.05rem;
+}
+
+.wrapper {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 80px;
+  align-items: start;
+}
+
+/* ---------------- LEFT ---------------- */
+
+.content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+}
+
+.content::before {
+  content: "";
+  position: absolute;
+  left: 34px;
+  top: 42px;
+  bottom: 42px;
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    var(--gold),
+    rgba(201, 162, 39, 0.15)
+  );
+  box-shadow: 0 0 20px rgba(201, 162, 39, 0.5);
+}
+
+.card {
+  position: relative;
+  display: flex;
+  gap: 24px;
+  padding: 28px 28px 28px 70px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  transition: all 0.35s ease;
+}
+
+.card:hover {
+  transform: translateX(14px);
+  border-color: var(--gold);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
+}
+
+.number {
+  position: absolute;
+  left: 6px;
+  top: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #111;
+  border: 2px solid var(--gold);
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.dot {
+  position: absolute;
+  left: 28px;
+  top: 44px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow:
+    0 0 20px rgba(201, 162, 39, 0.8),
+    0 0 40px rgba(201, 162, 39, 0.35);
+  z-index: 5;
+}
+
+.card h3 {
+  color: white;
+  font-size: 1.45rem;
+  margin-bottom: 12px;
+}
+
+.card p {
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.8;
+}
+
+/* ---------------- RIGHT ---------------- */
+
+/* ---------------- RIGHT ---------------- */
+
+.imageWrapper {
+  position: relative;
+
+  width: 100%;
+
+  height: min(80vh, 780px);
+  aspect-ratio: 3 / 4;
+
+  border-radius: 30px;
+  overflow: hidden;
+
+  background: #111;
+  border: 1px solid rgba(255,255,255,.08);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  will-change: transform;
+
+  transform: translateZ(0);
+backface-visibility: hidden;
+}
+
+.layer {
+  object-fit: contain;
+  object-position: center;
+  position: absolute !important;
+  inset: 0;
+  will-change: transform, opacity;
+}
+
+/* Initial State */
+
+.blueprint {
+  opacity: 1;
+  z-index: 1;
+}
+
+.half {
+  opacity: 0;
+  z-index: 2;
+}
+
+.finished {
+  opacity: 0;
+  z-index: 3;
+  transform: scale(1);
+}
+
+.thread{
+  position:absolute;
+  left:50%;
+  top:0;
+
+  width:3px;
+  height:100%;
+
+  transform:translateX(-50%) scaleY(0);
+
+  background:linear-gradient(
+      to bottom,
+      transparent,
+      #d4af37,
+      #fff1b3,
+      #d4af37,
+      transparent
+  );
+
+  filter:drop-shadow(0 0 15px #d4af37);
+
+  z-index:10;
+}
+
+.imageWrapper::before{
+  content:"";
+  position:absolute;
+  inset:-20%;
+  z-index:5;
+  pointer-events:none;
+
+  background:linear-gradient(
+    115deg,
+    transparent 25%,
+    rgba(255,255,255,.12) 45%,
+    rgba(212,175,55,.35) 50%,
+    rgba(255,255,255,.12) 55%,
+    transparent 75%
+  );
+
+  transform:translateX(-150%) rotate(8deg);
+}
+
+.imageWrapper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,.45),
+    transparent 35%
+  );
+  pointer-events: none;
+}
+
+/* ---------------- Responsive ---------------- */
+
+@media (max-width:1100px){
+
+  .wrapper{
+    grid-template-columns:1fr;
+    gap:60px;
+  }
+
+  .imageWrapper{
+    order:-1;
+
+    max-width:520px;
+    width:100%;
+
+    height:min(70vh,650px);
+
+    margin:0 auto;
+  }
+
+}
+
+@media (max-width:768px){
+
+  .section{
+    padding:110px 0;
+  }
+
+  .heading{
+    font-size:2.7rem;
+  }
+
+  .intro{
+    margin-bottom:60px;
+  }
+
+  .card{
+    padding:24px 22px 24px 70px;
+  }
+
+  .imageWrapper{
+    height:min(60vh,500px);
+    max-width:420px;
+  }
+
+}
+
+@media (max-width:500px){
+
+  .heading{
+    font-size:2.2rem;
+  }
+
+  .card h3{
+    font-size:1.2rem;
+  }
+
+  .imageWrapper{
+    height:420px;
+    max-width:100%;
+  }
+
+} 
+.card.active {
+  border-color: var(--gold);
+  background: rgba(212, 175, 55, 0.08);
+  transform: translateX(16px) scale(1.03);
+
+  box-shadow:
+    0 20px 50px rgba(0,0,0,.45),
+    0 0 35px rgba(212,175,55,.25);
+}
+
+.card.active .number{
+  background: var(--gold);
+  color: #111;
+}
+
+.card.active .dot{
+  transform: scale(1.6);
+  box-shadow:
+    0 0 15px #d4af37,
+    0 0 40px #d4af37,
+    0 0 70px rgba(212,175,55,.5);
+}
+
+.card,
+.number,
+.dot{
+  transition: all .45s ease;
+}
+.lightSweep{
+  position:absolute;
+  inset:-20%;
+  z-index:6;
+  pointer-events:none;
+
+  background:linear-gradient(
+    115deg,
+    transparent 30%,
+    rgba(255,255,255,.10) 45%,
+    rgba(212,175,55,.35) 50%,
+    rgba(255,255,255,.10) 55%,
+    transparent 70%
+  );
+
+  transform:translateX(-150%) rotate(10deg);
+}
+.particle{
+  position:absolute;
+
+  width:6px;
+  height:6px;
+
+  border-radius:50%;
+
+  background:#d4af37;
+
+  box-shadow:
+    0 0 10px #d4af37,
+    0 0 25px rgba(212,175,55,.7);
+
+  opacity:.7;
+
+  pointer-events:none;
+}

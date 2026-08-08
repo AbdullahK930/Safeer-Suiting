@@ -1,0 +1,50 @@
+.wrapper{
+    position:fixed;
+    inset:0;
+
+    pointer-events:none;
+    overflow:hidden;
+
+    z-index:-1;
+}
+
+.orb{
+    position:absolute;
+
+    border-radius:50%;
+    filter:blur(120px);
+
+    opacity:.14;
+}
+
+.one{
+    width:520px;
+    height:520px;
+
+    top:-140px;
+    left:-120px;
+
+    background:#d4af37;
+}
+
+.two{
+    width:420px;
+    height:420px;
+
+    right:-120px;
+    top:30%;
+
+    background:#b8860b;
+}
+
+.three{
+    width:600px;
+    height:600px;
+
+    bottom:-220px;
+    left:35%;
+
+    background:#ffd369;
+
+    opacity:.08;
+}

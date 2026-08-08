@@ -1,0 +1,355 @@
+.collections {
+  width: 100%;
+  background: #0b0b0b;
+  padding: 120px 8%;
+}
+
+.header {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 80px;
+}
+
+.header span {
+  color: #c9a227;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  font-size: .85rem;
+  font-weight: 600;
+}
+
+.header h2 {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 4rem;
+  color: white;
+  line-height: 1.1;
+  margin: 20px 0;
+}
+
+.header p {
+  color: rgba(255,255,255,.72);
+  line-height: 1.8;
+  max-width: 650px;
+  margin: auto;
+}
+
+/* ==========================
+   GENDER TOGGLE
+========================== */
+
+.genderToggle {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+
+  width: fit-content;
+  margin: 0 auto 56px;
+
+  padding: 6px;
+  border-radius: 999px;
+
+  background: #111;
+  border: 1px solid rgba(201,162,39,.15);
+}
+
+.toggleBtn {
+  padding: 12px 36px;
+  border: none;
+  border-radius: 999px;
+
+  background: transparent;
+  color: rgba(255,255,255,.6);
+
+  font-size: .95rem;
+  font-weight: 600;
+  letter-spacing: .5px;
+
+  cursor: pointer;
+  transition: .35s;
+}
+
+.toggleBtn:hover {
+  color: white;
+}
+
+.toggleBtnActive {
+  background: var(--gold);
+  color: #111;
+}
+
+.toggleBtnActive:hover {
+  color: #111;
+}
+
+/* ==========================
+   GRID
+========================== */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 40px;
+}
+
+.card {
+  background: #111;
+  border-radius: 22px;
+  overflow: hidden;
+  border: 1px solid rgba(201,162,39,.15);
+  transition: .45s;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  border-color: var(--gold);
+  box-shadow: 0 25px 60px rgba(0,0,0,.55);
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  height: 520px;
+  overflow: hidden;
+}
+
+.image {
+  object-fit: cover;
+  transition: transform .8s ease;
+}
+
+.card:hover .image {
+  transform: scale(1.08);
+}
+
+.content {
+  padding: 35px;
+}
+
+.content h3 {
+  color: white;
+  font-size: 2.1rem;
+  margin-bottom: 18px;
+}
+
+.content p {
+  color: rgba(255,255,255,.72);
+  line-height: 1.9;
+  margin-bottom: 30px;
+}
+
+.content button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  background: var(--gold);
+  color: #111;
+
+  border: none;
+  padding: 15px 28px;
+  border-radius: 999px;
+
+  cursor: pointer;
+  font-weight: 600;
+  transition: .35s;
+}
+
+.content button:hover {
+  background: white;
+}
+
+/* ==========================
+   MODAL
+========================== */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+
+  background: rgba(5, 5, 5, 0.78);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  -webkit-overflow-scrolling: touch;
+}
+
+.modalPanel {
+  position: relative;
+  width: 100%;
+  max-width: 1100px;
+  max-height: 88vh;
+
+  overflow-y: auto;
+
+  background: #0d0d0d;
+  border: 1px solid rgba(201, 162, 39, .25);
+  border-radius: 28px;
+  box-shadow: 0 40px 100px rgba(0,0,0,.6);
+
+  padding: 70px 50px 50px;
+}
+
+.modal h2 {
+  text-align: center;
+  font-size: 2.6rem;
+  color: white;
+  margin-bottom: 40px;
+}
+
+.close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+
+  width: 48px;
+  height: 48px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: rgba(255,255,255,.08);
+  color: white;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: .3s;
+  z-index: 2;
+}
+
+.close:hover {
+  background: var(--gold);
+  color: black;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 24px;
+}
+
+.galleryImage {
+  position: relative;
+  height: 420px;
+
+  border-radius: 18px;
+  overflow: hidden;
+
+  cursor: pointer;
+}
+
+.galleryImage img {
+  transition: transform .8s;
+}
+
+.galleryImage:hover img {
+  transform: scale(1.06);
+}
+
+/* ==========================
+   RESPONSIVE
+========================== */
+
+@media(max-width:1100px){
+
+  .gallery{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+}
+
+@media(max-width:992px){
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .imageWrapper{
+    height:480px;
+  }
+
+}
+
+@media(max-width:768px){
+
+  .collections{
+    padding:90px 6%;
+  }
+
+  .header h2{
+    font-size:2.8rem;
+  }
+
+  .gallery{
+    grid-template-columns:1fr;
+  }
+
+  .galleryImage{
+    height:380px;
+  }
+
+  .modal{
+    padding:16px;
+  }
+
+  .modalPanel{
+    padding:56px 24px 30px;
+    max-height:92vh;
+  }
+
+  .modal h2{
+    font-size:2.3rem;
+  }
+
+}
+
+@media(max-width:500px){
+
+  .header h2{
+    font-size:2.2rem;
+  }
+
+  .content{
+    padding:25px;
+  }
+
+  .content h3{
+    font-size:1.8rem;
+  }
+
+  .genderToggle{
+    margin-bottom:40px;
+  }
+
+  .toggleBtn{
+    padding:10px 24px;
+    font-size:.85rem;
+  }
+
+  .imageWrapper{
+    height:340px;
+  }
+
+  .content button{
+    width:100%;
+    justify-content:center;
+  }
+
+  .galleryImage{
+    height:280px;
+  }
+
+  .modalPanel{
+    padding:50px 18px 24px;
+  }
+
+}
