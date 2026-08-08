@@ -105,7 +105,7 @@ export default function Footer() {
           </a>
 
           <a
-            href="https://www.instagram.com/"
+            href="https://www.instagram.com/safeer_suiting_pk?igsh=ODVrZjU3dXkxdmw4&utm_source=qr"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Instagram"
