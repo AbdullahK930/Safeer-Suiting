@@ -31,7 +31,19 @@ export function unlockScroll() {
     document.body.style.left = "";
     document.body.style.right = "";
     document.body.style.width = "";
+
     window.scrollTo(0, savedScrollY);
-    window.__lenis?.start();
+
+    // Lenis caches the page's scrollable height; while body was
+    // position:fixed that height was effectively collapsed, so Lenis's own
+    // scrollTo (and its ongoing rAF loop once restarted) was clamping any
+    // target against that stale, too-short height and dragging the page
+    // back to a shorter position. Forcing a resize recalculates it against
+    // the now-restored normal layout before Lenis resumes driving scroll.
+    if (window.__lenis) {
+      window.__lenis.resize();
+      window.__lenis.scrollTo(savedScrollY, { immediate: true, force: true });
+      window.__lenis.start();
+    }
   }
 }

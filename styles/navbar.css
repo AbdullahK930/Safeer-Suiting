@@ -184,6 +184,9 @@
 }
 
 .menu-toggle {
+  position: relative;
+  z-index: 1100;
+
   display: none;
   align-items: center;
   justify-content: center;

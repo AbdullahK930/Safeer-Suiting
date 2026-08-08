@@ -55,6 +55,7 @@ export default function AnatomySuit() {
 
   useGSAP(() => {
     let particlesStarted = false;
+    let currentStage = -1;
     const cards = gsap.utils.toArray<HTMLElement>(".anatomy-card");
 
     // ----------------------------
@@ -72,6 +73,116 @@ export default function AnatomySuit() {
         once: true,
       },
     });
+
+    // ----------------------------
+    // INITIAL STATES
+    // ----------------------------
+    gsap.set(".blueprint", { opacity: 1, scale: 1, overwrite: "auto" });
+    gsap.set(".half", { opacity: 0, scale: 0.96, overwrite: "auto" });
+    gsap.set(".finished", { opacity: 0, scale: 0.96, overwrite: "auto" });
+    gsap.set("." + styles.thread, {
+      scaleY: 0,
+      transformOrigin: "top",
+      opacity: 1,
+      overwrite: "auto",
+    });
+    gsap.to("." + styles.lightSweep, {
+      x: "250%",
+      duration: 4,
+      repeat: -1,
+      ease: "none",
+    });
+
+    // ----------------------------
+    // CARD TEXT REVEAL (unrelated to the image — just each card
+    // fading/sliding into view as it's scrolled past)
+    // ----------------------------
+    cards.forEach((card) => {
+      gsap.from(card, {
+        opacity: 0,
+        x: -70,
+        duration: 0.8,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: card,
+          start: "top 85%",
+        },
+      });
+    });
+
+    const startParticles = () => {
+      if (particlesStarted) return;
+      particlesStarted = true;
+
+      const particles = gsap.utils.toArray<HTMLElement>(
+        "." + styles.particle
+      );
+
+      particles.forEach((particle) => {
+        gsap.set(particle, {
+          x: gsap.utils.random(30, 350),
+          y: gsap.utils.random(80, 700),
+          scale: gsap.utils.random(0.5, 1.5),
+        });
+
+        gsap.to(particle, {
+          y: "-=180",
+          x: "+=" + gsap.utils.random(-40, 40),
+          opacity: 0,
+          duration: gsap.utils.random(3, 6),
+          repeat: -1,
+          ease: "none",
+          delay: gsap.utils.random(0, 4),
+
+          onRepeat() {
+            gsap.set(particle, {
+              y: 700,
+              x: gsap.utils.random(30, 350),
+              opacity: 0.8,
+            });
+          },
+        });
+      });
+    };
+
+    // Six stages, one per card, driven directly by the pin's own scroll
+    // progress rather than by six separately-measured ScrollTriggers.
+    // Card-based triggers each depend on GSAP independently measuring that
+    // card's position, which on this stacked mobile layout (image pinned
+    // above a spacer-pushed content column) drifted out of sync with the
+    // pin's own release point — the crossfade ended up firing only after
+    // the image had already scrolled off-screen. Driving everything off
+    // one trigger's own progress removes that mismatch entirely.
+    //
+    //   0: blueprint visible (initial)
+    //   1: stitching thread draws in
+    //   2: blueprint -> half crossfade
+    //   3: half-tailored emphasis scale
+    //   4: half -> finished crossfade
+    //   5: finished emphasis + particles
+    const applyStage = (stage: number) => {
+      gsap.to(".blueprint", { opacity: stage < 2 ? 1 : 0, duration: 0.6 });
+
+      gsap.to(".half", {
+        opacity: stage >= 2 && stage < 4 ? 1 : 0,
+        scale: stage >= 3 ? 1.05 : stage >= 2 ? 1 : 0.96,
+        duration: 0.7,
+      });
+
+      gsap.to(".finished", {
+        opacity: stage >= 4 ? 1 : 0,
+        scale: stage >= 5 ? 1.08 : stage >= 4 ? 1.03 : 0.96,
+        duration: 0.8,
+      });
+
+      gsap.to("." + styles.thread, {
+        scaleY: stage >= 1 ? 1 : 0,
+        opacity: stage >= 5 ? 0.25 : 1,
+        duration: 0.7,
+      });
+
+      if (stage >= 5) startParticles();
+    };
 
     // ----------------------------
     // PIN THE IMAGE PANEL
@@ -96,266 +207,29 @@ export default function AnatomySuit() {
       (context) => {
         const { isDesktop } = context.conditions as { isDesktop: boolean };
 
+        const pinDuration = (contentRef.current?.offsetHeight || 0) + 400;
+
         ScrollTrigger.create({
           trigger: isDesktop ? contentRef.current : pinRef.current,
           start: isDesktop ? "top 120px" : "top 90px",
-          endTrigger: contentRef.current,
-          end: "bottom bottom",
+          end: "+=" + pinDuration,
           pin: pinRef.current,
           pinSpacing: true,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
           refreshPriority: 1,
+          onUpdate: (self) => {
+            const stage = Math.min(5, Math.floor(self.progress * 6));
+            if (stage !== currentStage) {
+              currentStage = stage;
+              applyStage(stage);
+            }
+          },
+          onLeaveBack: () => {
+            currentStage = 0;
+            applyStage(0);
+          },
         });
       }
     );
-    
-    // ----------------------------
-    // INITIAL STATES
-    // ----------------------------
-    gsap.set(".blueprint", {
-      opacity: 1,
-      scale: 1,
-      overwrite:"auto",
-    });
-    
-    gsap.set(".half", {
-      opacity: 0,
-      scale: 0.96,
-      overwrite:"auto",
-    });
-    
-    gsap.set(".finished", {
-      opacity: 0,
-      scale: 0.96,
-      overwrite:"auto",
-    });
-    
-    gsap.set("." + styles.thread, {
-      scaleY: 0,
-      transformOrigin: "top",
-      opacity: 1,
-      overwrite:"auto",
-    });
-    gsap.to("." + styles.lightSweep,{
-      x:"250%",
-      duration:4,
-      repeat:-1,
-      ease:"none"
-    });
-    
-    // ----------------------------
-    // CARD ANIMATIONS
-    // ----------------------------
-    cards.forEach((card) => {
-      gsap.from(card, {
-        opacity: 0,
-        x: -70,
-        duration: 0.8,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: card,
-          start: "top 85%",
-        },
-      });
-    });
-    
-    // ----------------------------
-    // CARD 1
-    // ----------------------------
-    ScrollTrigger.create({
-      trigger: cards[0],
-      start: "top center",
-      invalidateOnRefresh: true,
-    
-      onEnter: () => {
-    
-        gsap.to(".blueprint", {
-          opacity: 1,
-          duration: 0.5,
-        });
-    
-        gsap.to(".half", {
-          opacity: 0,
-          duration: 0.5,
-        });
-    
-        gsap.to(".finished", {
-          opacity: 0,
-          duration: 0.5,
-        });
-    
-      },
-    
-      onEnterBack: () => {
-    
-        gsap.to(".blueprint", {
-          opacity: 1,
-        });
-    
-        gsap.to(".half", {
-          opacity: 0,
-        });
-    
-        gsap.to(".finished", {
-          opacity: 0,
-        });
-    
-      },
-    
-    });
-    
-    // ----------------------------
-    // CARD 2
-    // ----------------------------
-    ScrollTrigger.create({
-      trigger: cards[1],
-      start: "top center",
-      invalidateOnRefresh: true,
-    
-      onEnter: () => {
-    
-        gsap.to("." + styles.thread, {
-          scaleY: 1,
-          duration: 0.8,
-        });
-    
-      },
-    
-    });
-    
-    // ----------------------------
-    // CARD 3
-    // ----------------------------
-    ScrollTrigger.create({
-      trigger: cards[2],
-      start: "top center",
-      invalidateOnRefresh: true,
-  
-      onEnter: () => {
-    
-        gsap.to(".blueprint", {
-          opacity: 0,
-          duration: 0.7,
-        });
-    
-        gsap.to(".half", {
-          opacity: 1,
-          scale: 1,
-          duration: 0.7,
-        });
-    
-      },
-    
-    });
-    
-    // ----------------------------
-    // CARD 4
-    // ----------------------------
-    ScrollTrigger.create({
-      trigger: cards[3],
-      start: "top center",
-      invalidateOnRefresh: true,
-    
-      onEnter: () => {
-    
-        gsap.to(".half", {
-          scale: 1.05,
-          duration: 0.8,
-        });
-    
-      },
-    
-    });
-    
-    // ----------------------------
-    // CARD 5
-    // ----------------------------
-    ScrollTrigger.create({
-      trigger: cards[4],
-      start: "top center",
-      invalidateOnRefresh: true,
-    
-      onEnter: () => {
-    
-        gsap.to(".half", {
-          opacity: 0,
-          duration: 0.6,
-        });
-    
-        gsap.to(".finished",{
-          opacity: 1,
-          scale:1.03,
-          duration:0.8,
-          overwrite:"auto"
-        });
-    
-      },
-    
-    });
-    
-    // ----------------------------
-    // CARD 6
-    // ----------------------------
-    ScrollTrigger.create({
-      trigger: cards[5],
-      start: "top center",
-      invalidateOnRefresh: true,
-    
-      onEnter: () => {
-    
-        gsap.to(".finished", {
-          scale: 1.08,
-          duration: 1,
-          ease: "power3.out",
-        });
-    
-        gsap.to("." + styles.thread, {
-          opacity: 0.25,
-          duration: 0.6,
-        });
-        if (particlesStarted) return;
-  particlesStarted = true;
-
-
-
-const particles = gsap.utils.toArray<HTMLElement>("." + styles.particle);
-
-particles.forEach((particle) => {
-
-  gsap.set(particle,{
-    x: gsap.utils.random(30,350),
-    y: gsap.utils.random(80,700),
-    scale: gsap.utils.random(.5,1.5)
-  });
-
-  gsap.to(particle,{
-    y:"-=180",
-    x:"+=" + gsap.utils.random(-40,40),
-    opacity:0,
-    duration:gsap.utils.random(3,6),
-    repeat:-1,
-    ease:"none",
-    delay:gsap.utils.random(0,4),
-
-    onRepeat(){
-      gsap.set(particle,{
-        y:700,
-        x:gsap.utils.random(30,350),
-        opacity:.8
-      });
-    }
-  });
-
-});
-    
-      },
-
-      
-      
-  
-    });
-   
 
   }, { scope: sectionRef });
 

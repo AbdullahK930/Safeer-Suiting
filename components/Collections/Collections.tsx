@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect } from "react";
 import { createPortal } from "react-dom";
+import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
@@ -127,6 +128,14 @@ export default function Collections() {
   const [gender, setGender] = useState<"men" | "women">("men");
   const [selected, setSelected] = useState<number | null>(null);
 
+  const [displayIndex, setDisplayIndex] = useState<number | null>(null);
+  // Adjusting state directly during render (guarded so it only fires on an
+  // actual change) is React's supported pattern for this, and avoids the
+  // extra render + lint warning that a useEffect-based version would cause.
+  if (selected !== null && selected !== displayIndex) {
+    setDisplayIndex(selected);
+  }
+
   const activeCollections = gender === "men" ? menCollections : womenCollections;
 
   const handleGenderChange = (next: "men" | "women") => {
@@ -135,11 +144,13 @@ export default function Collections() {
     setGender(next);
   };
 
-  // Only acts (and registers cleanup) while the modal is actually open, so
-  // mounting with selected=null never fires a stray unlock that could
-  // cancel an unrelated lock already held elsewhere (e.g. the page Loader,
-  // or the mobile nav menu).
-  useEffect(() => {
+  // useLayoutEffect (not useEffect) is important here: regular effect
+  // cleanup runs *after* the browser has already painted the new DOM state,
+  // so on close there was one frame where the modal had already unmounted
+  // (revealing the grid) but the page was still scroll-locked at the old
+  // offset — a visible flash/jump. Layout effects run synchronously before
+  // paint, so the unlock and the unmount land in the same frame.
+  useLayoutEffect(() => {
     if (selected === null) return;
 
     lockScroll();
@@ -259,42 +270,50 @@ export default function Collections() {
         ))}
       </div>
 
-      {selected !== null &&
-        createPortal(
-          <div
-            className={`${styles.modal} collections-modal`}
-            onClick={(e) => {
-              // Only close when the backdrop itself is clicked, not its content
-              if (e.target === e.currentTarget) setSelected(null);
-            }}
-          >
-            <div className={styles.modalPanel}>
-              <button
-                className={styles.close}
-                onClick={() => setSelected(null)}
-                aria-label="Close gallery"
-              >
-                <X size={28} />
-              </button>
+      {createPortal(
+        <AnimatePresence>
+          {selected !== null && displayIndex !== null && (
+            <motion.div
+              key="collections-modal"
+              className={`${styles.modal} collections-modal`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.28, ease: "easeInOut" }}
+              onClick={(e) => {
+                // Only close when the backdrop itself is clicked, not its content
+                if (e.target === e.currentTarget) setSelected(null);
+              }}
+            >
+              <div className={styles.modalPanel}>
+                <button
+                  className={styles.close}
+                  onClick={() => setSelected(null)}
+                  aria-label="Close gallery"
+                >
+                  <X size={28} />
+                </button>
 
-              <h2>{activeCollections[selected].title}</h2>
+                <h2>{activeCollections[displayIndex].title}</h2>
 
-              <div className={styles.gallery}>
-                {activeCollections[selected].images.map((img, i) => (
-                  <div key={i} className={styles.galleryImage}>
-                    <Image
-                      src={img}
-                      alt={`${activeCollections[selected].title} ${i + 1}`}
-                      fill
-                      className={styles.image}
-                    />
-                  </div>
-                ))}
+                <div className={styles.gallery}>
+                  {activeCollections[displayIndex].images.map((img, i) => (
+                    <div key={i} className={styles.galleryImage}>
+                      <Image
+                        src={img}
+                        alt={`${activeCollections[displayIndex].title} ${i + 1}`}
+                        fill
+                        className={styles.image}
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          </div>,
-          document.body
-        )}
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </section>
   );
 }
