@@ -48,7 +48,7 @@
 .intro {
   width: min(760px, 90%);
   margin: 0 auto 100px;
-  text-align: center;
+  text-align: justify;
   color: rgba(255, 255, 255, 0.72);
   line-height: 1.9;
   font-size: 1.05rem;
