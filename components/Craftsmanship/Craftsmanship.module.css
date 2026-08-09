@@ -1,133 +1,142 @@
 .section {
-    width: 100%;
-    background: #080808;
-    padding: 120px 8%;
+  width: 100%;
+  background: #080808;
+  padding: 120px 8%;
+}
+
+.heading {
+  max-width: 850px;
+  margin: 0 auto 80px;
+  text-align: center;
+}
+
+.heading span {
+  display: inline-block;
+  color: #c9a227;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+
+.heading h2 {
+  font-family: "Cormorant Garamond", serif;
+  color: #fff;
+  font-size: 3.8rem;
+  line-height: 1.15;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+/* .shimmer-text (global) switches this h2 to display:inline-block for its
+   clipped shine-sweep effect, which makes the inherited text-align:center
+   above a no-op (it only affects inline content within the box, not the
+   box itself). Same fix already applied on Testimonials' heading. */
+.heading h2:global(.shimmer-text) {
+  display: table;
+  margin-inline: auto;
+}
+
+.heading p {
+  color: rgba(255,255,255,.72);
+  font-size: 1.05rem;
+  line-height: 1.9;
+  max-width: 700px;
+  margin: auto;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 35px;
+}
+
+.card {
+  background: #111;
+  border: 1px solid rgba(201,162,39,.15);
+  border-radius: 22px;
+  overflow: hidden;
+  transition: all .4s ease;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  border-color: #c9a227;
+  box-shadow: 0 25px 60px rgba(0,0,0,.45);
+}
+
+.imageBox {
+  position: relative;
+  width: 100%;
+  height: 270px;
+  overflow: hidden;
+}
+
+.image {
+  object-fit: cover;
+  transition: transform .7s ease;
+}
+
+.card:hover .image {
+  transform: scale(1.08);
+}
+
+.icon {
+  margin: 28px 28px 18px;
+  color: #c9a227;
+}
+
+.card h3 {
+  color: #fff;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0 28px 18px;
+}
+
+.card p {
+  color: rgba(255,255,255,.72);
+  line-height: 1.8;
+  margin: 0 28px 32px;
+}
+
+@media (max-width:1100px){
+
+  .cards{
+    grid-template-columns:repeat(2,1fr);
   }
-  
-  .heading {
-    max-width: 850px;
-    margin: 0 auto 80px;
-    text-align: center;
+
+}
+
+@media (max-width:768px){
+
+  .section{
+    padding:90px 6%;
   }
-  
-  .heading span {
-    display: inline-block;
-    color: #c9a227;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    font-size: 0.85rem;
-    font-weight: 600;
-    margin-bottom: 18px;
+
+  .heading h2{
+    font-size:2.8rem;
   }
-  
-  .heading h2 {
-    font-family: "Cormorant Garamond", serif;
-    color: #fff;
-    font-size: 3.8rem;
-    line-height: 1.15;
-    font-weight: 600;
-    margin-bottom: 24px;
+
+  .cards{
+    grid-template-columns:1fr;
   }
-  
-  .heading p {
-    color: rgba(255,255,255,.72);
-    font-size: 1.05rem;
-    line-height: 1.9;
-    max-width: 700px;
-    margin: auto;
+
+  .imageBox{
+    height:250px;
   }
-  
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(3,1fr);
-    gap: 35px;
+
+}
+
+@media (max-width:500px){
+
+  .heading h2{
+    font-size:2.2rem;
   }
-  
-  .card {
-    background: #111;
-    border: 1px solid rgba(201,162,39,.15);
-    border-radius: 22px;
-    overflow: hidden;
-    transition: all .4s ease;
+
+  .card h3{
+    font-size:1.7rem;
   }
-  
-  .card:hover {
-    transform: translateY(-10px);
-    border-color: #c9a227;
-    box-shadow: 0 25px 60px rgba(0,0,0,.45);
-  }
-  
-  .imageBox {
-    position: relative;
-    width: 100%;
-    height: 270px;
-    overflow: hidden;
-  }
-  
-  .image {
-    object-fit: cover;
-    transition: transform .7s ease;
-  }
-  
-  .card:hover .image {
-    transform: scale(1.08);
-  }
-  
-  .icon {
-    margin: 28px 28px 18px;
-    color: #c9a227;
-  }
-  
-  .card h3 {
-    color: #fff;
-    font-family: "Cormorant Garamond", serif;
-    font-size: 2rem;
-    font-weight: 600;
-    margin: 0 28px 18px;
-  }
-  
-  .card p {
-    color: rgba(255,255,255,.72);
-    line-height: 1.8;
-    margin: 0 28px 32px;
-  }
-  
-  @media (max-width:1100px){
-  
-    .cards{
-      grid-template-columns:repeat(2,1fr);
-    }
-  
-  }
-  
-  @media (max-width:768px){
-  
-    .section{
-      padding:90px 6%;
-    }
-  
-    .heading h2{
-      font-size:2.8rem;
-    }
-  
-    .cards{
-      grid-template-columns:1fr;
-    }
-  
-    .imageBox{
-      height:250px;
-    }
-  
-  }
-  
-  @media (max-width:500px){
-  
-    .heading h2{
-      font-size:2.2rem;
-    }
-  
-    .card h3{
-      font-size:1.7rem;
-    }
-  
-  }
+
+}
