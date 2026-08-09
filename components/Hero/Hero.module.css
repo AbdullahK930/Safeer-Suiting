@@ -269,6 +269,7 @@
   .glow {
     width: 450px;
     height: 450px;
+    filter: blur(45px);
   }
 
 }

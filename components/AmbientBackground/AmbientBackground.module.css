@@ -6,20 +6,28 @@
     overflow:hidden;
 
     z-index:-1;
+
+    /* Promotes this to its own GPU compositing layer once, so the
+       continuously-animating, heavily-blurred orbs inside don't force a
+       full page repaint on every frame — just a cheap layer translate. */
+    will-change:transform;
+    transform:translateZ(0);
 }
 
 .orb{
     position:absolute;
 
     border-radius:50%;
-    filter:blur(120px);
+    filter:blur(60px);
 
     opacity:.14;
+
+    will-change:transform;
 }
 
 .one{
-    width:520px;
-    height:520px;
+    width:380px;
+    height:380px;
 
     top:-140px;
     left:-120px;
@@ -28,8 +36,8 @@
 }
 
 .two{
-    width:420px;
-    height:420px;
+    width:320px;
+    height:320px;
 
     right:-120px;
     top:30%;
@@ -38,8 +46,8 @@
 }
 
 .three{
-    width:600px;
-    height:600px;
+    width:420px;
+    height:420px;
 
     bottom:-220px;
     left:35%;
@@ -47,4 +55,29 @@
     background:#ffd369;
 
     opacity:.08;
+}
+
+/* Mobile GPUs are far more memory-constrained, and this is exactly where
+   the crash was reproduced — cut the cost further: smaller orbs, lighter
+   blur. The blur radius in particular is the single biggest cost driver
+   (roughly scales with radius squared), so this is the priority reduction. */
+@media (max-width:768px){
+    .orb{
+        filter:blur(36px);
+    }
+
+    .one{
+        width:240px;
+        height:240px;
+    }
+
+    .two{
+        width:200px;
+        height:200px;
+    }
+
+    .three{
+        width:260px;
+        height:260px;
+    }
 }

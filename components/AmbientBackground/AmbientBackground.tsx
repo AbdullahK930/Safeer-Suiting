@@ -10,6 +10,15 @@ export default function AmbientBackground() {
   const orb3 = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // The continuous infinite animation is what forces the browser to keep
+    // re-compositing these blurred layers forever, on every single frame —
+    // that ongoing cost (not just the blur itself) is a big part of what
+    // made this expensive enough to crash on zoom. On mobile, where GPU
+    // memory is most constrained (and where the crash was reproduced),
+    // skip the animation entirely: a static blurred layer gets rasterized
+    // once and cached, rather than recomputed indefinitely.
+    if (window.matchMedia("(max-width: 768px)").matches) return;
+
     gsap.to(orb1.current, {
       x: 120,
       y: -90,
